@@ -1,0 +1,70 @@
+
+version: "3"
+networks:
+  nomad_network:
+
+services:
+  nomad_seeder:
+    hostname: nomad_seeder 
+    build: ./nomad
+    networks:
+      - nomad_network
+    ports:
+      - "4646:4646"
+    volumes:
+      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
+    command: seeder
+    
+  nomad_server_a:
+    hostname: nomad_server_a
+    build: ./nomad
+    networks:
+      - nomad_network
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
+
+  nomad_server_b:
+    hostname: nomad_server_b
+    build: ./nomad
+    networks:
+      - nomad_network
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
+  
+  consul_ui:
+    build: ./nomad
+    networks:
+      - nomad_network
+    ports:
+      - "8500:8500"
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
+    entrypoint: /opt/consul/consul agent -client "{{ GetInterfaceIP \"eth0\" }}" -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder
+
+  nomad_client_a:
+    hostname: dataloader
+    build: ./nomad
+    networks:
+      - nomad_network
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/client/config_dataloader.nomad:/opt/nomad/config/config.nomad:ro
+    entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
+
+  nomad_client_b:
+    hostname: feeder
+    build: ./nomad
+    networks:
+      - nomad_network
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/client/config_feeder.nomad:/opt/nomad/config/config.nomad:ro
+    entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
