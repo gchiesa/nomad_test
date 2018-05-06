@@ -12,6 +12,7 @@ services:
     ports:
       - "4646:4646"
     volumes:
+      - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
     command: seeder
     
@@ -23,6 +24,7 @@ services:
     depends_on:
       - nomad_seeder
     volumes:
+      - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
 
   nomad_server_b:
@@ -33,9 +35,10 @@ services:
     depends_on:
       - nomad_seeder
     volumes:
+      - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
   
-  consul_ui:
+  consul_client:
     build: ./nomad
     networks:
       - nomad_network
@@ -44,10 +47,12 @@ services:
     depends_on:
       - nomad_seeder
     volumes:
+      - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
     entrypoint: /opt/consul/consul agent -client "{{ GetInterfaceIP \"eth0\" }}" -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder
 
   nomad_client_a:
+    privileged: true
     hostname: dataloader
     build: ./nomad
     networks:
@@ -55,10 +60,12 @@ services:
     depends_on:
       - nomad_seeder
     volumes:
+      - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_dataloader.nomad:/opt/nomad/config/config.nomad:ro
     entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
 
   nomad_client_b:
+    privileged: true
     hostname: feeder
     build: ./nomad
     networks:
@@ -66,5 +73,6 @@ services:
     depends_on:
       - nomad_seeder
     volumes:
+      - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_feeder.nomad:/opt/nomad/config/config.nomad:ro
     entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad

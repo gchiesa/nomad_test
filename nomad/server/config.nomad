@@ -5,5 +5,5 @@ server {
   bootstrap_expect = 3
 }
 consul {
-  address = "127.0.0.1:8500"
+  address = "{{ GetInterfaceIP 'eth0' }}:8500"
 }
