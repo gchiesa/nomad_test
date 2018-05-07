@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job.html
 #
-job "bulkchecker-service" {
+job "dataloader-batch" {
   # The "region" parameter specifies the region in which to execute the job. If
   # omitted, this inherits the default region name of "global".
   # region = "global"
@@ -29,7 +29,7 @@ job "bulkchecker-service" {
   #
   #     https://www.nomadproject.io/docs/jobspec/schedulers.html
   #
-  type = "service"
+  type = "batch"
 
   # The "constraint" stanza defines additional constraints for placing this job,
   # in addition to any resource or driver constraints. This stanza may be placed
@@ -42,10 +42,14 @@ job "bulkchecker-service" {
   #
   constraint {
     attribute = "${meta.node_type}"
-    value     = "feeder"
+    value     = "dataloader"
   }
 
   
+  periodic {
+    cron = "@hourly"
+    prohibit_overlap = true
+  }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
   # client.
@@ -55,7 +59,7 @@ job "bulkchecker-service" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group.html
   #
-  group "bulkchecker_service" {
+  group "dataloader_batch" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -71,7 +75,7 @@ job "bulkchecker-service" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 1
+      attempts = 2
       interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
@@ -93,7 +97,7 @@ job "bulkchecker-service" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task.html
     #
-    task "bulkchecker-service" {
+    task "dataloading" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
       driver = "raw_exec"
@@ -106,7 +110,7 @@ job "bulkchecker-service" {
         command = "/bin/bash" 
         args = [
           "-x", 
-          "/opt/shared/software/example.service.sh"
+          "/opt/shared/software/example.batch.sh"
         ]
       }
 
@@ -171,17 +175,18 @@ job "bulkchecker-service" {
       #
       #     https://www.nomadproject.io/docs/job-specification/service.html
       #
-      service {
-        name = "bulkchecker-service"
-        check {
-          type = "script"
-          name     = "${NOMAD_TASK_NAME} alive"
-          command = "/bin/bash"
-          args = ["/opt/shared/software/example.check.sh"]
-          interval = "30s"
-          timeout  = "5m"
-        }
-      }
+      // service {
+      //   name = "dataloader-service"
+      //   tags = ["global", "dataloader"]
+      //   check {
+      //     type = "script"
+      //     name     = "${NOMAD_TASK_NAME} alive"
+      //     command = "/bin/bash"
+      //     args = ["/opt/shared/software/example.check.sh"]
+      //     interval = "30s"
+      //     timeout  = "5m"
+      //   }
+      // }
 
       # The "template" stanza instructs Nomad to manage a template, such as
       # a configuration file or script. This template can optionally pull data

@@ -1,7 +1,7 @@
 data_dir = "/opt/nomad/data"
 
 consul {
-  address = "nomad_seeder:8500"
+  address = "consul_client:8500"
 }
 
 client {

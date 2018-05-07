@@ -39,6 +39,7 @@ services:
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
   
   consul_client:
+    hostname: consul_client
     build: ./nomad
     networks:
       - nomad_network
