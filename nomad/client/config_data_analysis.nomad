@@ -13,6 +13,6 @@ client {
     "driver.raw_exec.enable" = "1"
   }
   meta {
-    "node_type" = "feeder"
+    "node_type" = "data_analysis"
   }
 }

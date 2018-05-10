@@ -67,7 +67,7 @@ services:
 
   nomad_client_b:
     privileged: true
-    hostname: feeder
+    hostname: data_analysis
     build: ./nomad
     networks:
       - nomad_network
@@ -75,5 +75,5 @@ services:
       - nomad_seeder
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
-      - ./nomad/client/config_feeder.nomad:/opt/nomad/config/config.nomad:ro
+      - ./nomad/client/config_data_analysis.nomad:/opt/nomad/config/config.nomad:ro
     entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
