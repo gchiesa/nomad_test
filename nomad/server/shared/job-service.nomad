@@ -96,7 +96,7 @@ job "bulkchecker-service" {
     task "bulkchecker-service" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
-      driver = "raw_exec"
+      driver = "exec"
 
       # The "config" stanza specifies the driver configuration, which is passed
       # directly to the driver to start the task. The details of configurations
