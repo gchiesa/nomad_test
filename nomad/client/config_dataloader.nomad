@@ -2,6 +2,7 @@ data_dir = "/opt/nomad/data"
 
 consul {
   address = "consul_client:8500"
+  auto_advertise = false
 }
 
 client {

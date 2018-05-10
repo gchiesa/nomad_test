@@ -11,7 +11,7 @@
 #
 #     https://www.nomadproject.io/docs/job-specification/job.html
 #
-job "dataloader-batch" {
+job "java-service" {
   # The "region" parameter specifies the region in which to execute the job. If
   # omitted, this inherits the default region name of "global".
   # region = "global"
@@ -29,7 +29,7 @@ job "dataloader-batch" {
   #
   #     https://www.nomadproject.io/docs/jobspec/schedulers.html
   #
-  type = "batch"
+  type = "service"
 
   # The "constraint" stanza defines additional constraints for placing this job,
   # in addition to any resource or driver constraints. This stanza may be placed
@@ -42,14 +42,10 @@ job "dataloader-batch" {
   #
   constraint {
     attribute = "${meta.node_type}"
-    value     = "dataloader"
+    value     = "feeder"
   }
 
   
-  periodic {
-    cron = "@hourly"
-    prohibit_overlap = true
-  }
   # The "group" stanza defines a series of tasks that should be co-located on
   # the same Nomad client. Any task within a group will be placed on the same
   # client.
@@ -59,7 +55,7 @@ job "dataloader-batch" {
   #
   #     https://www.nomadproject.io/docs/job-specification/group.html
   #
-  group "dataloader_batch" {
+  group "java_service" {
     # The "count" parameter specifies the number of the task groups that should
     # be running under this group. This value must be non-negative and defaults
     # to 1.
@@ -75,7 +71,7 @@ job "dataloader-batch" {
     #
     restart {
       # The number of attempts to run the job within the specified interval.
-      attempts = 2
+      attempts = 1
       interval = "5m"
 
       # The "delay" parameter specifies the duration to wait before restarting
@@ -97,11 +93,14 @@ job "dataloader-batch" {
     #
     #     https://www.nomadproject.io/docs/job-specification/task.html
     #
-    task "dataloading" {
+    task "java-service" {
       # The "driver" parameter specifies the task driver that should be used to
       # run the task.
-      driver = "raw_exec"
+      driver = "jar"
 
+      artifact {
+        source      = "https://example.com/file.tar.gz"
+        destination = "/tmp/service"
       # The "config" stanza specifies the driver configuration, which is passed
       # directly to the driver to start the task. The details of configurations
       # are specific to each driver, so please see specific driver
@@ -110,7 +109,7 @@ job "dataloader-batch" {
         command = "/bin/bash" 
         args = [
           "-x", 
-          "/opt/shared/software/example.batch.sh"
+          "/opt/shared/software/example.service.sh"
         ]
       }
 
@@ -162,8 +161,7 @@ job "dataloader-batch" {
       #     https://www.nomadproject.io/docs/job-specification/resources.html
       #
       resources {
-        memory = 3096 # MB
-        cpu = 2000
+        memory = 256 # 256MB
       }
 
       # The "service" stanza instructs Nomad to register this task as a service
@@ -176,18 +174,17 @@ job "dataloader-batch" {
       #
       #     https://www.nomadproject.io/docs/job-specification/service.html
       #
-      // service {
-      //   name = "dataloader-service"
-      //   tags = ["global", "dataloader"]
-      //   check {
-      //     type = "script"
-      //     name     = "${NOMAD_TASK_NAME} alive"
-      //     command = "/bin/bash"
-      //     args = ["/opt/shared/software/example.check.sh"]
-      //     interval = "30s"
-      //     timeout  = "5m"
-      //   }
-      // }
+      service {
+        name = "bulkchecker-service"
+        check {
+          type = "script"
+          name     = "${NOMAD_TASK_NAME} alive"
+          command = "/bin/bash"
+          args = ["/opt/shared/software/example.check.sh"]
+          interval = "30s"
+          timeout  = "5m"
+        }
+      }
 
       # The "template" stanza instructs Nomad to manage a template, such as
       # a configuration file or script. This template can optionally pull data
