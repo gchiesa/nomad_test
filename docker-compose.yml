@@ -50,7 +50,7 @@ services:
     volumes:
       - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: /opt/consul/consul agent -client "{{ GetInterfaceIP \"eth0\" }}" -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder
+    entrypoint: su --login -c "/opt/consul/consul agent -client '{{ GetInterfaceIP \"eth0\" }}' -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder" hashicorp
 
   nomad_client_a:
     privileged: true
@@ -63,7 +63,7 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_dataloader.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp
 
   nomad_client_b:
     privileged: true
@@ -76,4 +76,4 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_data_analysis.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: /opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp

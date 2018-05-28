@@ -17,4 +17,8 @@ RUN unzip /tmp/consul_*.zip
 
 COPY server/start.sh /start.sh
 RUN chmod a+x /start.sh
+
+RUN adduser hashicorp
+RUN chown -R hashicorp. /opt/consul /opt/nomad
+
 ENTRYPOINT ["/start.sh"]

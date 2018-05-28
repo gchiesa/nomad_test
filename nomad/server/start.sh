@@ -9,7 +9,8 @@ else
 fi
 
 # consul 
-/opt/consul/consul agent -server -ui -bootstrap-expect=3 -data-dir=/opt/consul/data $joiners_args & 
+su --login -c "/opt/consul/consul agent -server -ui -bootstrap-expect=3 -data-dir=/opt/consul/data $joiners_args &" hashicorp
 
 # nomad
-/opt/nomad/nomad agent -server -config=/opt/nomad/config/config.nomad $joiners_args
+su --login -c "/opt/nomad/nomad agent -server -config=/opt/nomad/config/config.nomad $joiners_args" hashicorp
+
