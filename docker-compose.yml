@@ -11,6 +11,7 @@ services:
       - nomad_network
     ports:
       - "4646:4646"
+      - "8500:8500"
     volumes:
       - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
@@ -38,19 +39,19 @@ services:
       - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
   
-  consul_client:
-    hostname: consul_client
-    build: ./nomad
-    networks:
-      - nomad_network
-    ports:
-      - "8500:8500"
-    depends_on:
-      - nomad_seeder
-    volumes:
-      - ./nomad/server/shared:/opt/shared:ro      
-      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: su --login -c "/opt/consul/consul agent -client '{{ GetInterfaceIP \"eth0\" }}' -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder" hashicorp
+#  consul_client:
+#    hostname: consul_client
+#    build: ./nomad
+#    networks:
+#      - nomad_network
+#    ports:
+#      - "8500:8500"
+#    depends_on:
+#      - nomad_seeder
+#    volumes:
+#      - ./nomad/server/shared:/opt/shared:ro
+#      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
+#    entrypoint: su --login -c "/opt/consul/consul agent -client '{{ GetInterfaceIP \"eth0\" }}' -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder" hashicorp
 
   nomad_client_a:
     privileged: true

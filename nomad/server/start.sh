@@ -9,7 +9,7 @@ else
 fi
 
 # consul 
-su --login -c "/opt/consul/consul agent -server -ui -bootstrap-expect=3 -data-dir=/opt/consul/data $joiners_args &" hashicorp
+su --login -c "/opt/consul/consul agent -server -ui -bootstrap-expect=3 -data-dir=/opt/consul/data -client '{{ GetInterfaceIP \"eth0\" }}' $joiners_args &" hashicorp
 
 # nomad
 su --login -c "/opt/nomad/nomad agent -server -config=/opt/nomad/config/config.nomad $joiners_args" hashicorp
