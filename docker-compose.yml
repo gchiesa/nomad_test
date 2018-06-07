@@ -16,7 +16,9 @@ services:
       - ./nomad/server/shared:/opt/shared:ro      
       - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
     command: seeder
-    
+    environment:
+      - CONSUL_UI_BETA=true
+
   nomad_server_a:
     hostname: nomad_server_a
     build: ./nomad
@@ -55,7 +57,7 @@ services:
 
   nomad_client_a:
     privileged: true
-    hostname: dataloader
+    hostname: dataloader_rabo
     build: ./nomad
     networks:
       - nomad_network
@@ -77,4 +79,17 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_data_analysis.nomad:/opt/nomad/config/config.nomad:ro
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp
+
+  nomad_client_c:
+    privileged: true
+    hostname: dataloader_volksbank
+    build: ./nomad
+    networks:
+      - nomad_network
+    depends_on:
+      - nomad_seeder
+    volumes:
+      - ./nomad/client/shared:/opt/shared:ro
+      - ./nomad/client/config_dataloader_volks.nomad:/opt/nomad/config/config.nomad:ro
     entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp

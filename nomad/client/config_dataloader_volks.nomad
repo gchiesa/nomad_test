@@ -13,6 +13,6 @@ client {
     "driver.raw_exec.enable" = "1"
   }
   meta {
-    "node_type" = "dataloader_rabo"
+    "node_type" = "dataloader_volksbank"
   }
 }

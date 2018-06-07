@@ -3,7 +3,7 @@ FROM centos:7
 RUN yum install -y unzip net-tools iproute 
 WORKDIR /tmp
 RUN curl https://releases.hashicorp.com/nomad/0.8.3/nomad_0.8.3_linux_amd64.zip -O 
-RUN curl https://releases.hashicorp.com/consul/1.0.7/consul_1.0.7_linux_amd64.zip -O 
+RUN curl https://releases.hashicorp.com/consul/1.1.0/consul_1.1.0_linux_amd64.zip -O
 
 RUN mkdir -p /opt/nomad/config
 COPY server/config.nomad /opt/nomad/config/config.nomad 

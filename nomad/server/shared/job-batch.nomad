@@ -4,7 +4,7 @@ job "scheduler-dataloader-rabo" {
 
   constraint {
     attribute = "${meta.node_type}"
-    value     = "dataloader"
+    value     = "dataloader_rabo"
   }
 
   periodic {
@@ -39,6 +39,13 @@ job "scheduler-dataloader-rabo" {
 
   group "rabobank_ada" {
 
+    restart {
+      attempts = 2
+      interval = "5m"
+      delay    = "15s"
+      mode     = "fail"
+    }
+
     task "ada_in" {
       driver = "raw_exec"
       config {
@@ -49,7 +56,7 @@ job "scheduler-dataloader-rabo" {
         ]
       }
       resources {
-        memory = 512
+        memory = 10
       }
     }
 
@@ -63,8 +70,18 @@ job "scheduler-dataloader-rabo" {
         ]
       }
       resources {
-        memory = 512
+        memory = 10
       }
+    }
+  }
+
+  group "rabobank_cleanup" {
+
+    restart {
+      attempts = 2
+      interval = "5m"
+      delay    = "15s"
+      mode     = "fail"
     }
 
     task "ada_clean" {
@@ -81,4 +98,5 @@ job "scheduler-dataloader-rabo" {
       }
     }
   }
+
 }
