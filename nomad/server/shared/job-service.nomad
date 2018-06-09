@@ -34,10 +34,10 @@ job "bulkchecker-service" {
         check {
           type     = "script"
           name     = "${NOMAD_TASK_NAME} alive"
-          command  = "/bin/bash"
-          args     = ["/opt/shared/software/example.check.sh"]
-          interval = "30s"
-          timeout  = "5m"
+          command  = "bash"
+          args     = ["-c", "exec /opt/shared/software/example.check.sh"]
+          interval = "10s"
+          timeout  = "2s"
         }
       }
     }

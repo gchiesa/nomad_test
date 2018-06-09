@@ -1,4 +1,4 @@
-data_dir = "/opt/nomad/data"
+data_dir = "/opt/nomad_data"
 
 consul {
   address = "nomad_seeder:8500"

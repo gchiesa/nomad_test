@@ -53,7 +53,7 @@ services:
 #    volumes:
 #      - ./nomad/server/shared:/opt/shared:ro
 #      - ./nomad/server/config.nomad:/opt/nomad/config/config.nomad:ro
-#    entrypoint: su --login -c "/opt/consul/consul agent -client '{{ GetInterfaceIP \"eth0\" }}' -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder" hashicorp
+#    entrypoint: su --login -c "/opt/consul/consul agent -client '{{ GetInterfaceIP \"eth0\" }}' -ui -data-dir=/opt/consul/data -retry-join=nomad_seeder" jcomponent
 
   nomad_client_a:
     privileged: true
@@ -66,7 +66,7 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_dataloader.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" jcomponent
 
   nomad_client_b:
     privileged: true
@@ -79,7 +79,7 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro      
       - ./nomad/client/config_data_analysis.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" jcomponent
 
   nomad_client_c:
     privileged: true
@@ -92,4 +92,4 @@ services:
     volumes:
       - ./nomad/client/shared:/opt/shared:ro
       - ./nomad/client/config_dataloader_volks.nomad:/opt/nomad/config/config.nomad:ro
-    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" hashicorp
+    entrypoint: su --login -c "/opt/nomad/nomad agent -config=/opt/nomad/config/config.nomad" jcomponent

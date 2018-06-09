@@ -9,8 +9,7 @@ else
 fi
 
 # consul 
-su --login -c "export CONSUL_UI_BETA=true && /opt/consul/consul agent -log-level=debug -server -ui -bootstrap-expect=3 -data-dir=/opt/consul/data -client '{{ GetInterfaceIP \"eth0\" }}' $joiners_args &" hashicorp
+su --login -c "export CONSUL_UI_BETA=true && /opt/consul/consul agent -server -ui -bootstrap-expect=3 -data-dir=/opt/consul_data -client '{{ GetInterfaceIP \"eth0\" }}' $joiners_args &" jcomponent
 
 # nomad
-su --login -c "/opt/nomad/nomad agent -server -config=/opt/nomad/config/config.nomad $joiners_args" hashicorp
-
+su --login -c "/opt/nomad/nomad agent -server -config=/opt/nomad/config/config.nomad $joiners_args" jcomponent
