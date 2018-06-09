@@ -27,8 +27,8 @@ job "scheduler-dataloader-volksbank" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.batch.sh"
+          "-c",
+          "exec /opt/shared/software/python.batch.py"
         ]
       }
       resources {

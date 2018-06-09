@@ -18,8 +18,8 @@ job "bulkchecker-service" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.service.sh"
+          "-c",
+          "exec /opt/shared/software/python.service.py"
         ]
       }
       logs {

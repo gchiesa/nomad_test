@@ -27,8 +27,8 @@ job "scheduler-dataloader-rabo" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.batch.sh"
+          "-c",
+          "exec /opt/shared/software/python.batch.py"
         ]
       }
       resources {
@@ -51,8 +51,8 @@ job "scheduler-dataloader-rabo" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.batch.sh"
+          "-c",
+          "exec /opt/shared/software/python.batch.py"
         ]
       }
       resources {
@@ -65,8 +65,8 @@ job "scheduler-dataloader-rabo" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.batch.sh"
+          "-c",
+          "exec /opt/shared/software/python.batch.py"
         ]
       }
       resources {
@@ -89,8 +89,8 @@ job "scheduler-dataloader-rabo" {
       config {
         command = "/bin/bash"
         args    = [
-          "-x",
-          "/opt/shared/software/example.batch.sh"
+          "-c",
+          "exec /opt/shared/software/python.batch.py"
         ]
       }
       resources {
